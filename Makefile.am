@@ -4,7 +4,7 @@ AM_CPPFLAGS = -Wall -Wextra
 
 lib_LTLIBRARIES = libsmacker.la
 libsmacker_la_SOURCES = smacker.c
-libsmacker_la_LDFLAGS = -version-info 1:2:0
+libsmacker_la_LDFLAGS = -version-info 1:2:1
 
 noinst_PROGRAMS = driver smk2avi
 
