@@ -848,7 +848,7 @@ static smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned
 			s->source.file.chunk_offset[temp_u] = ftell(fp.file);
 
 			if (fseek(fp.file, s->chunk_size[temp_u], SEEK_CUR)) {
-				fprintf(stderr, "libsmacker::smk_open - ERROR: fseek to frame %lu not OK.\n", temp_u);
+				fprintf(stderr, "libsmacker::smk_open_generic - ERROR: fseek to frame %lu not OK.\n", temp_u);
 				perror("\tError reported was");
 				goto error;
 			}
@@ -1200,7 +1200,7 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 
 			/* check for overflow condition */
 			if (i + count > 256) {
-				fprintf(stderr, "libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x80 attempt to skip %d entries from %d\n", count, i);
+				fprintf(stderr, "libsmacker::smk_render_palette() - ERROR: overflow, 0x80 attempt to skip %d entries from %d\n", count, i);
 				goto error;
 			}
 
@@ -1212,7 +1212,7 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 				starting from entry (s),
 				to the next entries of the new palette. */
 			if (size < 2) {
-				fputs("libsmacker::palette_render(s,p,size) - ERROR: 0x40 ran out of bytes for copy\n", stderr);
+				fputs("libsmacker::smk_render_palette() - ERROR: 0x40 ran out of bytes for copy\n", stderr);
 				goto error;
 			}
 
@@ -1228,7 +1228,7 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 			/* overflow: see if we write/read beyond 256colors, or overwrite own palette */
 			if (i + count > 256 || src + count > 256 ||
 				(src < i && src + count > i)) {
-				fprintf(stderr, "libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x40 attempt to copy %d entries from %d to %d\n", count, src, i);
+				fprintf(stderr, "libsmacker::smk_render_palette() - ERROR: overflow, 0x40 attempt to copy %d entries from %d to %d\n", count, src, i);
 				goto error;
 			}
 
@@ -1239,13 +1239,13 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 			/* 0x00: Set Color block
 				Direct-set the next 3 bytes for palette index */
 			if (size < 3) {
-				fprintf(stderr, "libsmacker::palette_render - ERROR: 0x3F ran out of bytes for copy, size=%lu\n", size);
+				fprintf(stderr, "libsmacker::smk_render_palette() - ERROR: 0x3F ran out of bytes for copy, size=%lu\n", size);
 				goto error;
 			}
 
 			for (count = 0; count < 3; count ++) {
 				if (*p > 0x3F) {
-					fprintf(stderr, "libsmacker::palette_render - ERROR: palette index exceeds 0x3F (entry [%u][%u])\n", i, count);
+					fprintf(stderr, "libsmacker::smk_render_palette() - ERROR: palette index exceeds 0x3F (entry [%u][%u])\n", i, count);
 					goto error;
 				}
 
@@ -1259,7 +1259,7 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 	}
 
 	if (i < 256) {
-		fprintf(stderr, "libsmacker::palette_render - ERROR: did not completely fill palette (idx=%u)\n", i);
+		fprintf(stderr, "libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u)\n", i);
 		goto error;
 	}
 
@@ -1506,19 +1506,19 @@ static char smk_render_audio(struct smk_audio_t * s, unsigned char * p, unsigned
 		bit = smk_bs_read_1(&bs);
 
 		if (!bit) {
-			fputs("libsmacker::smk_render_audio - ERROR: initial get_bit returned 0\n", stderr);
+			fputs("libsmacker::smk_render_audio() - ERROR: initial get_bit returned 0\n", stderr);
 			goto error;
 		}
 
 		bit = smk_bs_read_1(&bs);
 
 		if (s->channels != (bit == 1 ? 2 : 1))
-			fputs("libsmacker::smk_render - ERROR: mono/stereo mismatch\n", stderr);
+			fputs("libsmacker::smk_render_audio() - ERROR: mono/stereo mismatch\n", stderr);
 
 		bit = smk_bs_read_1(&bs);
 
 		if (s->bitdepth != (bit == 1 ? 16 : 8))
-			fputs("libsmacker::smk_render - ERROR: 8-/16-bit mismatch\n", stderr);
+			fputs("libsmacker::smk_render_audio() - ERROR: 8-/16-bit mismatch\n", stderr);
 
 		/* build the trees */
 		smk_huff8_build(&aud_tree[0], &bs);
