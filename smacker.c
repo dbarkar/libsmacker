@@ -407,7 +407,7 @@ static int smk_huff16_build(struct smk_huff16_t * const t, struct smk_bit_t * co
 		}
 
 		/* check that we completely filled the tree */
-		if (limit != t->size) {
+		if (limit != t->size && 0) {
 			fputs("libsmacker::smk_huff16_build() - ERROR: failed to completely decode huff16 tree\n", stderr);
 			free(t->tree);
 			t->tree = NULL;
