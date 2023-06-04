@@ -5,6 +5,10 @@ option(LIBSMACKER_BUILD_TOOLS "Build smk2avi and driver executables" OFF)
 
 add_library(libsmacker smacker.c)
 
+if(WIN32 AND BUILD_SHARED_LIBS)
+    target_sources(libsmacker PRIVATE smacker.def)
+endif()
+
 if(MSVC)
     target_compile_definitions(libsmacker PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 else()
