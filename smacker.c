@@ -420,7 +420,8 @@ static int smk_huff16_build(struct smk_huff16_t * const t, struct smk_bit_t * co
 		}
 
 		t->tree[0] = 0;
-		//t->cache[0] = t->cache[1] = t->cache[2] = 0;
+		t->cache[0] = t->cache[1] = t->cache[2] = 0;
+		return 1;
 	}
 
 	/* Check final end tag. */
